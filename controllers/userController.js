@@ -29,3 +29,27 @@ module.exports = async (req, res, next) => {
     next(err);
   }
 };
+
+module.exports = async (req, res, next) => {
+  try {
+    const { name, email, password } = req.body;
+    if (!email || !password) {
+      return next(new AppError("Please Provide Email and Password!", 400));
+    }
+    const user = await User.findOne({ email }).select("+password"); //since default password won't be included in the query
+
+    if (!user || (await user.correctPassword(password))) {
+      return next(new AppError("Incorrect email or password", 401));
+    }
+
+    const token = signToken(user._id);
+
+    res.status(200).json({
+      status: "success",
+      token,
+      data: { user },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
