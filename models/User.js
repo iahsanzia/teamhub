@@ -39,4 +39,15 @@ const userSchema = new mongoose.Schema(
   },
 );
 
+//Password Encryption before saving
+
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bycrypt.hash(this.password, 6);
+  return next();
+});
+userSchema.methods.correctPassword = async function (candidatePassword) {
+  return await bycrypt.compare(candidatePassword, this.password);
+};
+
 module.exports = mongoose.model("User", userSchema);
