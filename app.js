@@ -4,6 +4,7 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const errorHandler = require("./middlewares/errorMiddleware");
 const userRoutes = require("./routes/userRoutes");
+const AppError = require("./utils/appError");
 
 const app = express();
 
@@ -26,6 +27,10 @@ app.get("/", (req, res) => {
     status: "success",
     message: "App Running",
   });
+});
+
+app.all("/{*splat}", (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl}`, 404));
 });
 
 app.use(errorHandler);
