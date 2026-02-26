@@ -3,6 +3,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const errorHandler = require("./middlewares/errorMiddleware");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
@@ -17,6 +18,8 @@ app.use(morgan("dev"));
 
 //BODY PARSER
 app.use(express.json());
+
+app.use("/api/users", userRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({
