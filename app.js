@@ -4,6 +4,7 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const errorHandler = require("./middlewares/errorMiddleware");
 const userRoutes = require("./routes/userRoutes");
+const teamRoutes = require("./routes/teamRoutes");
 const AppError = require("./utils/appError");
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 app.use("/api/users", userRoutes);
+app.use("/api/teams", teamRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({
