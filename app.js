@@ -6,6 +6,7 @@ const errorHandler = require("./middlewares/errorMiddleware");
 const userRoutes = require("./routes/userRoutes");
 const teamRoutes = require("./routes/teamRoutes");
 const projectRoutes = require("./routes/projectRoutes");
+const taskRoutes = require("./routes/taskRoutes");
 const AppError = require("./utils/appError");
 
 const app = express();
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/teams", teamRoutes);
 app.use("api/", projectRoutes);
+app.use("/api", taskRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({

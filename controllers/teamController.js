@@ -79,7 +79,7 @@ exports.deleteTeam = catchAsync(async (req, res, next) => {
 
   await team.deleteOne();
 
-  res.status(200).json({
+  res.status(204).json({
     status: "success",
     data: null,
   });

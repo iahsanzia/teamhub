@@ -32,3 +32,38 @@ exports.createTask = catchAsync(async (req, res, next) => {
     data: { task },
   });
 });
+
+exports.getProjectTasks = cathcAsync(async (req, res, next) => {
+  const tasks = await Task.find({
+    project: req.params.projectId,
+  }).populate("assignedTo", "name email");
+
+  res.status(200).json({
+    status: "success",
+    results: tasks.length,
+    data: { tasks },
+  });
+});
+
+exports.updateTasks = catchAsync(async (req, res, next) => {
+  const task = await Task.findByIdAndUpdate(req.params.taskId, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!task) return next(new AppError("Task Not Found", 404));
+
+  res.status(200).json({
+    status: "success",
+    data: { task },
+  });
+});
+
+exports.deleteTask = catchAsync(async (req, res, next) => {
+  const task = await Task.findByIdAndDelete(req.params.taskId);
+  if (!task) return next(new AppError("Task Not Found", 404));
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});

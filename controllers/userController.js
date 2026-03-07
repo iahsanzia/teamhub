@@ -70,7 +70,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     expiresIn: "7d",
   });
 
-  res.status(200).json({
+  res.status(204).json({
     status: "success",
     token,
   });

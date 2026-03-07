@@ -62,7 +62,7 @@ exports.deleteProject = catchAsync(async (req, res, next) => {
   const project = await Project.findByIdAndDelete(req.params.projectId);
   if (!project) return next(new AppError("Project not Found", 404));
 
-  res.status(200).json({
+  res.status(204).json({
     status: "success",
     data: null,
   });
