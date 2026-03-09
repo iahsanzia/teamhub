@@ -41,7 +41,7 @@ exports.addMember = catchAsync(async (req, res, next) => {
   if (team.owner.toString() !== req.user.id)
     return next(new AppError("Only Owner can Add Members", 403));
 
-  if (!team.members.includes(userId)) {
+  if (!team.members.some((member) => member.toString() === userId)) {
     team.members.push(userId);
     await team.save();
   }
@@ -73,9 +73,9 @@ exports.removeMember = catchAsync(async (req, res, next) => {
 exports.deleteTeam = catchAsync(async (req, res, next) => {
   const team = await Team.findById(req.params.teamId);
 
-  if (!team) return next(new AppError("Team not found"), 404);
+  if (!team) return next(new AppError("Team not found", 404));
   if (team.owner.toString() !== req.user.id)
-    return next(new AppError("Only Owner delete team", 403));
+    return next(new AppError("Only Owner can delete team", 403));
 
   await team.deleteOne();
 

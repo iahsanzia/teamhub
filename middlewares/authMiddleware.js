@@ -14,11 +14,20 @@ exports.protect = async (req, res, next) => {
   if (!token) {
     return next(new AppError("Your are not logged in", 401));
   }
-
-  const decoded = jwt.verify(token, process.env.JWT_SECRET); //token verification
-
+  let decoded;
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET); //token verification
+  } catch (err) {
+    return next(new AppError("Invalid or Expired Token", 401));
+  }
   //checking if user still exists
-  const currentUser = await User.findById(decoded.id);
+  let currentUser;
+  try {
+    currentUser = await User.findById(decoded.id);
+  } catch (err) {
+    return next(new AppError("Something went wrong. Please try again", 500));
+  }
+
   if (!currentUser) {
     return next(new AppError("User no longer exists", 401));
   }

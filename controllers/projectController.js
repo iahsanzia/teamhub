@@ -12,7 +12,7 @@ exports.createProject = catchAsync(async (req, res, next) => {
 
   if (!team) return next(new AppError("Team NOT FOUND", 404));
 
-  if (!team.members.includes(req.user.id))
+  if (!team.members.some((member) => member.toString() === req.user.id))
     return next(new AppError("You are not a member of this team", 403));
 
   const project = await Project.create({
@@ -46,7 +46,7 @@ exports.getTeamProjects = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.updateProjects = catchAsync(async (req, res, next) => {
+exports.updateProject = catchAsync(async (req, res, next) => {
   const project = await Project.findByIdAndUpdate(
     req.params.projectId,
     req.body,

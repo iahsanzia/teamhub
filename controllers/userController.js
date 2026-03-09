@@ -25,7 +25,7 @@ exports.register = catchAsync(async (req, res, next) => {
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { email, password } = req.body;
   if (!email || !password) {
     return next(new AppError("Please Provide Email and Password!", 400));
   }
@@ -66,11 +66,9 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   user.password = newPassword;
   await user.save();
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: "7d",
-  });
+  const token = signToken(user._id);
 
-  res.status(204).json({
+  res.status(200).json({
     status: "success",
     token,
   });

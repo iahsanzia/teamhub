@@ -2,7 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const rateLimit = require("express-rate-limit");
 const errorHandler = require("./middlewares/errorMiddleware");
+const mongoSanitize = require("express-mongo-sanitize");
+const hpp = require("hpp");
 const userRoutes = require("./routes/userRoutes");
 const teamRoutes = require("./routes/teamRoutes");
 const projectRoutes = require("./routes/projectRoutes");
@@ -21,12 +24,24 @@ app.use(cors());
 //Logging
 app.use(morgan("dev"));
 
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: "Too many requests from this IP",
+});
+
+app.use("/api", limiter);
+
+app.use(mongoSanitize());
+
+app.use(hpp());
+
 //BODY PARSER
 app.use(express.json());
 
 app.use("/api/users", userRoutes);
 app.use("/api/teams", teamRoutes);
-app.use("api/", projectRoutes);
+app.use("/api", projectRoutes);
 app.use("/api", taskRoutes);
 app.use("/api", activityRoutes);
 

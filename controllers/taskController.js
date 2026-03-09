@@ -14,9 +14,7 @@ exports.createTask = catchAsync(async (req, res, next) => {
 
   if (!project) return next(new AppError("Project NOT FOUND", 404));
 
-  const team = await Team.findById(project.team);
-
-  if (!team.members.includes(req.user.id))
+  if (!project.team.members.some((member) => member.toString() === req.user.id))
     return next(new AppError("You are not a member of this team", 403));
 
   const task = await Task.create({
@@ -41,7 +39,7 @@ exports.createTask = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getProjectTasks = cathcAsync(async (req, res, next) => {
+exports.getProjectTasks = catchAsync(async (req, res, next) => {
   const { status, sort, page = 1, limit = 10, search } = req.query;
 
   const queryObj = { project: req.params.projectId };
@@ -88,7 +86,7 @@ exports.getMyTasks = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.updateTasks = catchAsync(async (req, res, next) => {
+exports.updateTask = catchAsync(async (req, res, next) => {
   const task = await Task.findByIdAndUpdate(req.params.taskId, req.body, {
     new: true,
     runValidators: true,

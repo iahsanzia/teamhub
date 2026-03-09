@@ -1,4 +1,4 @@
-const Activity = require("./../utils/createActivity");
+const Activity = require("./../models/Activity");
 const catchAsync = require("./../utils/catchAsync");
 
 exports.getProjectActivities = catchAsync(async (req, res, next) => {
