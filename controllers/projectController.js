@@ -2,6 +2,7 @@ const Project = require("./../models/Project");
 const Team = require("./../models/Team");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
+const createActivity = require("../utils/createActivity");
 
 exports.createProject = catchAsync(async (req, res, next) => {
   const { teamId } = req.params;
@@ -19,6 +20,12 @@ exports.createProject = catchAsync(async (req, res, next) => {
     description,
     team: teamId,
     createdBy: req.user.id,
+  });
+
+  await createActivity({
+    action: "created a project",
+    user: req.user.id,
+    project: project._id,
   });
 
   res.status(201).json({

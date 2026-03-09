@@ -7,6 +7,7 @@ const userRoutes = require("./routes/userRoutes");
 const teamRoutes = require("./routes/teamRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const taskRoutes = require("./routes/taskRoutes");
+const activityRoutes = require("./routes/activityRoutes");
 const AppError = require("./utils/appError");
 
 const app = express();
@@ -27,6 +28,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/teams", teamRoutes);
 app.use("api/", projectRoutes);
 app.use("/api", taskRoutes);
+app.use("/api", activityRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({

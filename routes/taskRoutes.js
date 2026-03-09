@@ -16,6 +16,8 @@ router.post("/projects/:projectId/tasks", createTask);
 
 router.get("/projects/:projectId/tasks", getProjectTasks);
 
+router.get("/tasks/my-tasks", getMyTasks);
+
 router.patch("/tasks/:taskId", updateTask);
 
 router.delete("/tasks/:taskId", deleteTask);
